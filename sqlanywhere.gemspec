@@ -1,3 +1,13 @@
+pkg_version = ""
+
+# The package version of determined by parsing the c source file. This ensures the version is
+# only ever specified ins a single place.
+File.open(File.join("ext", "sqlanywhere.c") ) do |f|
+   f.grep( /const char\* VERSION/ ) do |line|
+      pkg_version = /\s*const char\* VERSION\s*=\s*["|']([^"']*)["|'];\s*/.match(line)[1]
+   end
+end
+
 Gem::Specification.new do |gem|
   gem.authors = ["Eric Farrar"]
   gem.email = 'eric.farrar@ianywhere.com'
