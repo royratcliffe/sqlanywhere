@@ -148,10 +148,15 @@ static VALUE C2RB(a_sqlany_data_value* value)
    else {
       switch( value->type ) {
 	case A_BINARY:
-	    tdata = rb_str_new(value->buffer, *value->length);
+	    tdata =  rb_str_new(value->buffer, *value->length);
 	    break;
 	case A_STRING:
-	    tdata = rb_str_new(value->buffer, *value->length);
+            // Change rb_str_new to rb_external_new as rb_str_new returns a string encoded in ASCII-8BIT
+            // which may not be the same as the DB causing 'incompatible character encodings ascii-8bit and utf-8'
+            // errors. I'm changing them to rb_external_str_new which will convert the strings using the value set
+            // in Encoding.default_external
+	    // See http://yugui.jp/articles/838
+	    tdata = rb_external_str_new(value->buffer, *value->length);
 	    break;
 	case A_DOUBLE:
 	    tdata = rb_float_new(*(double*) value->buffer);

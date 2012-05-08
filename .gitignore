@@ -1,0 +1,6 @@
+ext/*.o
+ext/*.old
+ext/*.so
+ext/Makefile
+lib/*
+*.gem
