@@ -1,6 +1,6 @@
 #====================================================
 #
-#    Copyright 2008-2010 iAnywhere Solutions, Inc.
+#    Copyright 2012 iAnywhere Solutions, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@
 require 'fileutils'
 require 'rbconfig'
 require 'rake/clean'
-require 'rake/rdoctask'
+require 'rdoc/task'
 require 'rubygems'
-require 'rubygems/builder'
+require 'rubygems/package'
 
 # By default, windows will try to use nmake instead of make. If you are on windows but using
 # a different compiler that uses standard make, set this to false.
@@ -39,7 +39,7 @@ USE_NMAKE_ON_WIN = true
 APPLY_MANIFEST = false
 
 PACKAGE_NAME = "sqlanywhere"
-ARCH=Config::CONFIG['arch']
+ARCH=RbConfig::CONFIG['arch']
 
 Dir.mkdir('lib') unless File.directory?('lib')
 pkg_version = ""
@@ -72,8 +72,7 @@ spec = Gem::Specification.new do |spec|
   spec.has_rdoc = true
   spec.rubyforge_project = 'sqlanywhere'
   spec.homepage = 'http://sqlanywhere.rubyforge.org'
-  spec.platform = Gem::Platform::CURRENT
-  spec.required_ruby_version = '>= 1.8.6'
+  spec.required_ruby_version = '>= 2.2.2'
   spec.require_paths = ['lib']
   spec.test_file  = 'test/sqlanywhere_test.rb'
   spec.rdoc_options << '--title' << 'SQL Anywhere Ruby Driver' <<
@@ -102,7 +101,7 @@ file "sqlanywhere-#{pkg_version}-#{spec.platform}.gem" => ["Rakefile",
    # Set the gem to be platform specific since it includes compiled binaries   
    spec.platform = Gem::Platform::CURRENT
    #spec.extensions = ''
-   Gem::Builder.new(spec).build
+   Gem::Package.build(spec)
 end
 
 # Builds the source gem for any platform
@@ -118,9 +117,8 @@ file "sqlanywhere-#{pkg_version}.gem" => ["Rakefile",
    # Get the updated list of files to include in the gem
    spec.files = Dir['ext/**/*'] + Dir['lib/**/*'] + Dir['test/**/*'] + Dir['CHANGELOG'] + Dir['LICENSE'] + Dir['README'] + Dir['Rakefile']
    # Since this contains no compilked binaries, set it to be platform RUBY
-   spec.platform = Gem::Platform::RUBY
    spec.extensions = 'ext/extconf.rb'
-   Gem::Builder.new(spec).build
+   Gem::Package.build(spec)
 end
 
 file File.join("lib", library_file) => [File.join("ext", library_file)] do
@@ -184,7 +182,7 @@ task :dist do |t|
    FileUtils.cp "#{PACKAGE_NAME}-#{pkg_version}-#{spec.platform}.gem", "build"
 end
 
-Rake::RDocTask.new do |rd|
+RDoc::Task.new do |rd|
    rd.title = "SQL Anywhere Ruby Driver"
    rd.main = "README"
    rd.rdoc_files.include('README', 'CHANGELOG', 'LICENSE', 'ext/sqlanywhere.c')
@@ -196,3 +194,4 @@ task :publish_rdoc => ["html/index.html"] do
 end
 
 CLOBBER.include("sqlanywhere-#{pkg_version}-#{spec.platform}.gem", "sqlanywhere-#{pkg_version}.gem", "lib/*", "ext/*.obj", "ext/*.def", "ext/*.so", "ext/*.bundle", "ext/*.log", "ext/*.exp", "ext/*.lib", "ext/*.pdb", "ext/Makefile", "ext/*.so.manifest", "ext/*.o", "build/**/*", "build")
+
