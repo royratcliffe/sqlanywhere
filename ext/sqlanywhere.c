@@ -1591,6 +1591,32 @@ static_Bind_set_buffer_size(VALUE bind, VALUE size)
 
 /*
  * call-seq:
+ *   set_type(VALUE bind, VALUE type) -> nil
+ *
+ *  Sets the type of the bound parameter before binding.
+ *
+ *  <b>Parameters</b>:
+ *  - <tt>VALUE bind</tt> -- Bound parameter retrieved from sqlany_describe_bind_param().
+ *  - <tt>VALUE type</tt> -- The type of the binding variable.
+ *
+ *  <b>Returns</b>:
+ *  - <tt>nil</tt>.
+ *
+ */
+static VALUE
+static_Bind_set_type(VALUE bind, VALUE type)
+{
+    a_sqlany_bind_param* s_bind;
+
+    Data_Get_Struct(bind, a_sqlany_bind_param, s_bind);
+
+    s_bind->value.type = NUM2CHR(type);
+
+    return (Qnil);
+}
+
+/*
+ * call-seq:
  *   get_direction(VALUE bind) -> VALUE direction
  * 
  *  Gets the direction of the bound parameter.
@@ -1609,6 +1635,28 @@ static_Bind_get_direction(VALUE bind)
     Data_Get_Struct(bind, a_sqlany_bind_param, s_bind);
 
     return (CHR2FIX(s_bind->direction));
+}
+
+/*
+ * call-seq:
+ *   get_type(VALUE bind) -> VALUE type
+ *
+ *  Gets the type of the bound parameter.
+ *
+ *  <b>Parameters</b>:
+ *  - <tt>VALUE bind</tt> -- Bound parameter retrieved from sqlany_describe_bind_param().
+ *
+ *  <b>Returns</b>:
+ *  - <tt>VALUE name</tt>: The type of the bound parameter.
+ *
+ */
+static VALUE
+static_Bind_get_type(VALUE bind)
+{
+    a_sqlany_bind_param* s_bind;
+    Data_Get_Struct(bind, a_sqlany_bind_param, s_bind);
+
+    return (CHR2FIX(s_bind->value.type));
 }
 
 /*
@@ -1749,7 +1797,9 @@ void Init_sqlanywhere()
   rb_define_method(cA_sqlany_bind_param, "set_direction", static_Bind_set_direction, 1);  
   rb_define_method(cA_sqlany_bind_param, "set_buffer_size", static_Bind_set_buffer_size, 1);  
   rb_define_method(cA_sqlany_bind_param, "finish", static_Bind_finish, 0);  
-  
+  rb_define_method(cA_sqlany_bind_param, "get_type", static_Bind_get_type, 0);
+  rb_define_method(cA_sqlany_bind_param, "set_type", static_Bind_set_type, 1);
+
   // Define methods for obtaining bind_parameter_info fields
   rb_define_method(cA_sqlany_bind_param_info, "get_direction", static_Bind_get_info_direction, 0);
   rb_define_method(cA_sqlany_bind_param_info, "get_output", static_Bind_get_info_output, 0);
