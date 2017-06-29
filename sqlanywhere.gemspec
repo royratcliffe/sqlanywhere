@@ -21,7 +21,6 @@ Gem::Specification.new do |gem|
   gem.has_rdoc = true
   gem.rubyforge_project = 'sqlanywhere'
   gem.homepage = 'http://sqlanywhere.rubyforge.org'
-  gem.platform = Gem::Platform::CURRENT
   gem.required_ruby_version = '>= 1.8.6'
   gem.require_paths = ['lib']
   gem.test_file  = 'test/sqlanywhere_test.rb'
@@ -29,4 +28,5 @@ Gem::Specification.new do |gem|
                        '--main' << 'README' <<
                        '--line-numbers'
   gem.extra_rdoc_files = ['README', 'CHANGELOG', 'LICENSE', 'ext/sqlanywhere.c']
+  gem.extensions = %w[ext/extconf.rb]
 end
