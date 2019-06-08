@@ -69,7 +69,6 @@ spec = Gem::Specification.new do |spec|
   EOF
   spec.version = pkg_version
   #spec.autorequire = 'sqlanywhere'
-  spec.has_rdoc = true
   spec.rubyforge_project = 'sqlanywhere'
   spec.homepage = 'http://sqlanywhere.rubyforge.org'
   spec.required_ruby_version = '>= 2.2.2'
@@ -194,4 +193,3 @@ task :publish_rdoc => ["html/index.html"] do
 end
 
 CLOBBER.include("sqlanywhere-#{pkg_version}-#{spec.platform}.gem", "sqlanywhere-#{pkg_version}.gem", "lib/*", "ext/*.obj", "ext/*.def", "ext/*.so", "ext/*.bundle", "ext/*.log", "ext/*.exp", "ext/*.lib", "ext/*.pdb", "ext/Makefile", "ext/*.so.manifest", "ext/*.o", "build/**/*", "build")
-

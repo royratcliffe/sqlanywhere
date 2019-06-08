@@ -18,7 +18,6 @@ Gem::Specification.new do |gem|
   EOF
   gem.version = pkg_version
   #gem.autorequire = 'sqlanywhere'
-  gem.has_rdoc = true
   gem.rubyforge_project = 'sqlanywhere'
   gem.homepage = 'http://sqlanywhere.rubyforge.org'
   gem.required_ruby_version = '>= 1.8.6'
